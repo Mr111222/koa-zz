@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div class="box">
+      <h5>图片 banenr</h5>
+      <ul>
+        <%bannerData.forEach(res=>{%>
+          <li><img src="<%= HTTP_ROOT%>/upload/<%= res.src%>" alt=""></li>
+        <%})%>
+       
+      </ul>
+  </div>
+  
+  <div class="box">
+      <h5>catalog</h5>
+      <ul>
+        <%catalogData.forEach(res=>{%>
+          <li><%= res.title %></li>
+        <%})%>
+      </ul>
+  </div>
+
+  <div class="box">
+      <h5>article</h5>
+      <ul>
+        <%articleData.forEach(res=>{%>
+          <li><%= res.created_time %></li>
+        <%})%>
+      </ul>
+  </div>
+ 
+</body>
+</html>
+
+<style>
+  *{
+    margin:0;
+    padding:0;
+    list-style: none;
+  }
+  .box{
+    float: left;
+    margin-right: 50px;
+  }
+  img{
+    width:200px;
+    height:auto;
+  }
+</style>

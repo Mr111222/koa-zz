@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title><%= page_type %></title>
+</head>
+<body>
+    <div class="nav">
+      <ul>
+        <%for(let i in page_types){%>
+          <li><a href="/admin/<%= i %>" <%if(page_type == i){%> class="active"<%}%>><%= page_types[i] %></a></li>
+        <%}%>
+      </ul>
+    </div>
+    <div class="box">
+      <div class="tab">
+          <h3>表格数据</h3>
+          <table width="1000" align="center" style="text-align: center;" class="gridtable">
+              <thead>
+                <tr style="width:40px;">
+                  <td>ID</td>
+                  <%fields.forEach(res=>{%>
+                    <td><%= res.title%></td>
+                  <%})%>
+                  <td>操作</td>
+                </tr>
+              </thead>
+              <tbody>
+                <% datas.forEach(data=>{%>
+                <tr>
+                  <td><%= data.ID %></td>
+                  <%fields.forEach(res=>{%>
+                    <td><%= data[res.name] %></td>
+                  <%})%>
+                  <td>
+                    <!-- <a  class="mod" href="<%= HTTP_ROOT %>/admin/<%=page_type%>/mod/<%= data.ID %>">修改</a> -->
+                    <!-- <a href="<%= HTTP_ROOT %>/admin/<%=page_type%>/del/<%= data.ID %>" onclick="return confirm('是否删除')">删除</a> -->
+                    <a href="#" class="mod" data-id="<%= data.ID %>">修改</a>
+                    <a href="<%= HTTP_ROOT %>/admin/<%=page_type%>/del/<%= data.ID %>" onclick="return confirm('是否删除')">删除</a>
+                  </td>
+                </tr>
+              <%})%>
+              </tbody>
+            </table>
+      </div>
+      <div class="inp">
+        <!-- <h3><%= type=='view'?'添加':'修改' %></h3> -->
+        <h3 class="title">添加</h3>
+        <form action="<%= HTTP_ROOT %>/admin/<%= page_type%>" method="post" enctype="multipart/form-data" class="forms">
+          <% fields.forEach( res=>{%>
+            <%if(res.type == 'textarea'){%>
+              <%= res.title %>&nbsp;&nbsp;<textarea rows="10"  name="<%= res.name %>" placeholder="<%= res.title%>" <% if(type=='mod'){%>value="<%= oldData[res.name] %>"<%}%>></textarea row="10"><br><br>
+            <%}else if(res.type == 'select'){%>
+              <%= res.title %>&nbsp;&nbsp;
+              <select name="<%= res.name %>" <% if(type=='mod'){%>value="<%= oldData[res.name] %>"<%}%>>
+                <%res.list.forEach(res=>{%>
+                  <option value="<%= res.ID %>"><%= res.title %></option>
+                <%})%>
+              </select><br><br>
+            <%}else{%>
+              <%= res.title %>&nbsp;&nbsp;<input type="<%= res.type %>" name="<%= res.name %>" placeholder="<%= res.title%>" <% if(type=='mod'){%>value="<%= oldData[res.name] %>"<%}%>><br><br>
+            <%}%>
+          <%})%>
+          <input type="submit" value="提交" id="btn">
+        </form>
+      </div>
+    </div>
+</body>
+</html>
+<script src="<%= HTTP_ROOT %>/js/jquery1.7.js"></script>
+<script>
+  const HTTP_ROOT = '<%= HTTP_ROOT %>'
+  const page_type = '<%= page_type %>'
+  $('.mod').on('click',async function(){
+    let id = this.dataset.id
+    let url=`${HTTP_ROOT}/admin/${page_type}/get/${id}`
+    let data = await $.ajax({
+      url,
+      dataType: 'json'
+    })
+
+    if(data.err){
+      alert(data.msg)
+      }else{
+        let oldData = data.data
+        $(".title").html('修改')
+        $(".tab").hide()
+        $(".forms").attr('action', `${HTTP_ROOT}/admin/${page_type}/mod/${id}`)   
+        $(".forms").find('input, textarea, select').each(function(){
+          if(oldData[this.name] !== undefined){
+          try{ // 剔除对type="file"的赋值报错
+            if(this.type == 'date'){
+              let oDate = new Date(oldData[this.name]*1000)
+              this.value = `${oDate.getFullYear()}-${getZero(oDate.getMonth()+1)}-${getZero(oDate.getDate())}`
+            }else{
+              this.value = oldData[this.name]
+            }
+          }catch(e){}
+          }
+        })
+      }
+  })
+
+
+  function getZero(val){
+    return val<10 ? `0${val}` : ''+val
+  }
+
+</script>
+<style>
+  *{
+    margin:0;
+    padding:0;
+    list-style: none;
+    text-decoration: none;
+  }
+  .box{
+    width:1500px;
+    height:500px;
+    margin:10px auto;
+    clear: both;
+  }
+  .nav{
+    margin-top:20px;
+    height:50px;
+  }
+  .nav ul li{
+    float:left;
+    margin: 0 10px;
+  }
+  .nav ul li a{
+    background: #409EFF;
+    color:#fff;
+    padding:10px 5px;
+    border-radius: 5px;
+  }
+  .nav ul li .active{
+    background: #246;
+  }
+  .tab{
+    float: right;
+  }
+  .inp{
+    float: left;
+  }
+
+   .gridtable{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size:11px;
+    color:#333;
+    border-width:1px;
+    border-color:#666;
+    border-collapse: collapse;
+    
+  }
+   .gridtable th{
+    border-width: 1px;
+    padding:8px;
+    border:1px solid #dedede;
+    text-align: center;
+  }
+   .gridtable td{
+    border:1px solid #666;
+    background: #fff;
+    padding:8px;
+    text-align: center;
+  }
+</style>
