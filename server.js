@@ -16,7 +16,7 @@ const router = new Router()
 
 
 
-
+// search only data for id
 router.get('/add/:id/', async ctx=>{
 	let {id} = ctx.params;
 	let datas = await db.query('SELECT * FROM tab WHERE ID=?', [id])
@@ -28,19 +28,57 @@ router.get('/add/:id/', async ctx=>{
 })
 
 
+// get all datas
+router.get('/all', async ctx=>{
+	let datas = await db.query('SELECT * FROM tab')
+	if(datas && datas.length>0){
+		ctx.body = {err:0, message: 'success', data: datas}
+	}else{
+		ctx.body = {err:1, message: 'error'}
+	}
+})
 
-// router.post('/add/:id/', async ctx=>{
-// 	let {id} = ctx.params;
-// 	let datas = await db.query('SELECT * FROM tab WHERE ID=?', [id])
-// 	if(datas && datas.length>0){
-// 		ctx.body = {err:0, message: 'success', data: datas}
-// 	}else{
-// 		ctx.body = {err:1, message: 'error'}
-// 	}
-// })
+// add new data to datas
+router.post('/newAdd', async ctx=>{
+	let {name, age} = ctx.request.fields
+	let datas = ctx.db.query('INSERT INTO tab (name, age) VALUES(?,?)',[name, age])
+	if(datas){
+		ctx.body = {err:0, message: 'success'}
+	}else{
+		ctx.body = {err:1, message: 'error'}
+	}
+})
+
+// update datas
+router.post('/update', async ctx=>{
+	let {name, age, id} = ctx.request.fields
+	const keys = ['name', 'age'] // 根据传入的key值进行赋值
+	let datas = ctx.db.query(`UPDATE tab SET ${keys.map(res=>(`${res}=?`)).join(',')} WHERE id=?`,[name,age,id])
+	if(datas){												
+		ctx.body = {err:0, message: 'success update'}
+	}else{
+		ctx.body = {err:1, message: 'error'}
+	}
+})
+
+// del data for id
+router.get('/del/:id', async ctx=>{
+	let {id} = ctx.params
+	let datas = ctx.db.query(`DELETE FROM tab WHERE id=${id}`)
+	if(datas){
+		ctx.body = {err:0, message: 'del success'}
+	}else{
+		ctx.body = {err:1, message: 'del error'}
+	}
+})
 
 
-// new add
+// ctx.db.query('SELECT INTO tab')
+// ctx.db.query(`SELECT INTO tab WHERE id=${id}`)
+// ctx.db.query('INSERT INTO tab (name, age) VALUES(?,?)',[name, age])
+// ctx.db.query(`UPDATE tab SET ${keys.map(key=>(`${key}=?`)).join(',')} WHERE ID=?`, [...vals, id])
+// ctx.db.query(UPDATE class_tab SET title="xx", WHERE id='1')
+// ctx.db.query(`DELETE FRMO tab WHERE id=${id}`)
 
 
 // 中间件
@@ -93,31 +131,6 @@ router.use('/', require('./routers/www'))
 
 // 设置静态文件缓存时间
 staticFiles(router)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
