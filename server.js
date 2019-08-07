@@ -79,6 +79,9 @@ router.get('/del/:id', async ctx=>{
 // ctx.db.query(`UPDATE tab SET ${keys.map(key=>(`${key}=?`)).join(',')} WHERE ID=?`, [...vals, id])
 // ctx.db.query(UPDATE class_tab SET title="xx", WHERE id='1')
 // ctx.db.query(`DELETE FRMO tab WHERE id=${id}`)
+// 2019-08-06T14:25:02.494340Z 1 [Note] A temporary password is generated for root@localhost: g9Ff1K5v9u*2
+// {"K":"NAVGUJ8ZEVAPJAUW", "N":"52pojie", "O":"52pojie.cn", "DI":"MDFlM2IwNjY3YzdjMDdm", "T": 1565100814}
+
 
 
 // 中间件
