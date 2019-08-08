@@ -18,6 +18,7 @@ const router = new Router()
 router.post('/login', async ctx=>{
 	let {user, pass} = ctx.request.fields
 	let datas = await db.query('SELECT * FROM user_tab')
+	console.log(datas, 8989)
 	datas.some((res,index)=>{
 		if(res.user === user && res.pass === pass){
 			ctx.body = {err:0, message: 'login success', data: res}
@@ -81,38 +82,6 @@ router.get('/del/:id', async ctx=>{
 		ctx.body = {err:0, message: 'del success'}
 	}else{
 		ctx.body = {err:1, message: 'del error'}
-
-// add new data to datas
-router.post('/newAdd', async ctx=>{
-	let {name, age} = ctx.request.fields
-	let datas = ctx.db.query('INSERT INTO tab (name, age) VALUES(?,?)',[name, age])
-	if(datas){
-		ctx.body = {err:0, message: 'success'}
-	}else{
-		ctx.body = {err:1, message: 'error'}
-	}
-})
-
-// update datas
-router.post('/update', async ctx=>{
-	let {name, age, id} = ctx.request.fields
-	const keys = ['name', 'age'] // 根据传入的key值进行赋值
-	let datas = ctx.db.query(`UPDATE tab SET ${keys.map(res=>(`${res}=?`)).join(',')} WHERE id=?`,[name,age,id])
-	if(datas){												
-		ctx.body = {err:0, message: 'success update'}
-	}else{
-		ctx.body = {err:1, message: 'error'}
-	}
-})
-
-// del data for id
-router.get('/del/:id', async ctx=>{
-	let {id} = ctx.params
-	let datas = ctx.db.query(`DELETE FROM tab WHERE id=${id}`)
-	if(datas){
-		ctx.body = {err:0, message: 'del success'}
-	}else{
-		ctx.body = {err:1, message: 'del error'}
 	}
 })
 
@@ -123,9 +92,10 @@ router.get('/del/:id', async ctx=>{
 // ctx.db.query(`UPDATE tab SET ${keys.map(key=>(`${key}=?`)).join(',')} WHERE ID=?`, [...vals, id])
 // ctx.db.query(UPDATE class_tab SET title="xx", WHERE id='1')
 // ctx.db.query(`DELETE FRMO tab WHERE id=${id}`)
+// 
 // 2019-08-06T14:25:02.494340Z 1 [Note] A temporary password is generated for root@localhost: g9Ff1K5v9u*2
+// If you lose this password, please consult the section How to Reset the Root Password in the MySQL reference manual.
 // {"K":"NAVGUJ8ZEVAPJAUW", "N":"52pojie", "O":"52pojie.cn", "DI":"MDFlM2IwNjY3YzdjMDdm", "T": 1565100814}
-
 
 
 // 中间件
