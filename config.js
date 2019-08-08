@@ -3,8 +3,8 @@ module.exports = {
   // mysql 配置于
   DB_HOST:'localhost',
   DB_USER:'root',
-  DB_PASSWORD: 'Zz111222',
-  DB_NAME: 'class_tab',
+  DB_PASSWORD: '111222',
+  DB_NAME: 'test',
 
 
   // 开发环境路径
