@@ -17,6 +17,8 @@
 <script>
   $(function(){
     $('.btn').on('click', function(){
+      var dates =  new Date().getTime()
+      console.log(dates, 'date')
       $('.date').val('2019-03-15')
     })
   })

@@ -40,6 +40,21 @@ router.get('/add/:id/', async ctx=>{
 	}
 })
 
+// redux test
+const list = [
+    '早晨上班打卡',
+    '中午吃饭休息',
+    '休息的时候看个电影',
+    '下午下班回家',
+    '回家堵车中......'
+  ]
+router.get('/redux', async ctx=>{
+	if(list && list.length>0){
+		ctx.body = {err:0, message: 'success', data: list}
+	}else{
+		ctx.body = {err:1, message: 'error'}
+	}
+})
 
 // get all datas
 router.get('/all', async ctx=>{
